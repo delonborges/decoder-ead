@@ -1,15 +1,15 @@
-package com.ead.course.services.implementations;
+package com.ead.course.services.impls;
 
 import com.ead.course.repositories.LessonRepository;
 import com.ead.course.services.LessonService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LessonServiceImplementation implements LessonService {
+public class LessonServiceImpl implements LessonService {
 
     final LessonRepository lessonRepository;
 
-    public LessonServiceImplementation(LessonRepository lessonRepository) {
+    public LessonServiceImpl(LessonRepository lessonRepository) {
         this.lessonRepository = lessonRepository;
     }
 }
