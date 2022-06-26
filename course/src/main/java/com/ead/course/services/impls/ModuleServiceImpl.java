@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ModuleServiceImpl implements ModuleService {
@@ -29,5 +31,20 @@ public class ModuleServiceImpl implements ModuleService {
             lessonRepository.deleteAll(lessonModelList);
         }
         moduleRepository.delete(moduleModel);
+    }
+
+    @Override
+    public ModuleModel save(ModuleModel moduleModel) {
+        return moduleRepository.save(moduleModel);
+    }
+
+    @Override
+    public Optional<ModuleModel> findModuleFromCourse(UUID courseId, UUID moduleId) {
+        return moduleRepository.findModuleFromCourse(courseId, moduleId);
+    }
+
+    @Override
+    public List<ModuleModel> findAllModulesFromCourse(UUID courseId) {
+        return moduleRepository.findAllModulesFromCourse(courseId);
     }
 }
