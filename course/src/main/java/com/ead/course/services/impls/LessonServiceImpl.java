@@ -1,5 +1,6 @@
 package com.ead.course.services.impls;
 
+import com.ead.course.models.LessonModel;
 import com.ead.course.repositories.LessonRepository;
 import com.ead.course.services.LessonService;
 import org.springframework.stereotype.Service;
@@ -11,5 +12,10 @@ public class LessonServiceImpl implements LessonService {
 
     public LessonServiceImpl(LessonRepository lessonRepository) {
         this.lessonRepository = lessonRepository;
+    }
+
+    @Override
+    public LessonModel save(LessonModel lessonModel) {
+        return lessonRepository.save(lessonModel);
     }
 }
