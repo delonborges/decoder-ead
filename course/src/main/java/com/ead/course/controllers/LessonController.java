@@ -53,4 +53,18 @@ public class LessonController {
             return ResponseEntity.status(HttpStatus.OK).body("Lesson deleted successfully");
         }
     }
+
+    @PutMapping("/modules/{moduleId}/lessons/{lessonId}")
+    public ResponseEntity<Object> updateLesson(@PathVariable(value = "moduleId") UUID moduleId,
+                                               @PathVariable(value = "lessonId") UUID lessonId,
+                                               @RequestBody @Valid LessonDto lessonDto) {
+        Optional<LessonModel> lessonModelOptional = lessonService.findLessonFromModule(moduleId, lessonId);
+        if (lessonModelOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lesson not found for this course");
+        } else {
+            var lessonModel = lessonModelOptional.get();
+            BeanUtils.copyProperties(lessonDto, lessonModel);
+            return ResponseEntity.status(HttpStatus.CREATED).body(lessonService.save(lessonModel));
+        }
+    }
 }
