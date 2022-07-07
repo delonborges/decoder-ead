@@ -5,6 +5,7 @@ import com.ead.course.repositories.LessonRepository;
 import com.ead.course.services.LessonService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,5 +31,10 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public void delete(LessonModel lessonModel) {
         lessonRepository.delete(lessonModel);
+    }
+
+    @Override
+    public List<LessonModel> findAllLessonsFromModules(UUID moduleId) {
+        return lessonRepository.findAllLessonsFromModule(moduleId);
     }
 }

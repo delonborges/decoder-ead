@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -65,6 +66,22 @@ public class LessonController {
             var lessonModel = lessonModelOptional.get();
             BeanUtils.copyProperties(lessonDto, lessonModel);
             return ResponseEntity.status(HttpStatus.CREATED).body(lessonService.save(lessonModel));
+        }
+    }
+
+    @GetMapping("/modules/{moduleId}/lessons")
+    public ResponseEntity<List<LessonModel>> getAllLessonsFromModule(@PathVariable(value = "moduleId") UUID moduleId) {
+        return ResponseEntity.status(HttpStatus.OK).body(lessonService.findAllLessonsFromModules(moduleId));
+    }
+
+    @GetMapping("/modules/{moduleId}/lessons/{lessonId}")
+    public ResponseEntity<Object> getLessonById(@PathVariable(value = "moduleId") UUID moduleId,
+                                                @PathVariable(value = "lessonId") UUID lessonId) {
+        Optional<LessonModel> lessonModelOptional = lessonService.findLessonFromModule(moduleId, lessonId);
+        if (lessonModelOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lesson not found for this course");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(lessonModelOptional.get());
         }
     }
 }
