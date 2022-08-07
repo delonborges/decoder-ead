@@ -27,6 +27,17 @@ public class SpecificationTemplate {
         };
     }
 
+    public static Specification<LessonModel> lessonModuleId(final UUID moduleId) {
+        return (root, query, cb) -> {
+            query.distinct(true);
+
+            Root<ModuleModel> module = query.from(ModuleModel.class);
+            Expression<Collection<LessonModel>> moduleLessons = module.get("lessons");
+
+            return cb.and(cb.equal(module.get("moduleId"), moduleId), cb.isMember(root, moduleLessons));
+        };
+    }
+
     @And({@Spec(path = "name", spec = Like.class),
           @Spec(path = "courseStatus", spec = Equal.class),
           @Spec(path = "courseLevel", spec = Equal.class)})
