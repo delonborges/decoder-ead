@@ -38,19 +38,24 @@ public class SpecificationTemplate {
         };
     }
 
-    @And({@Spec(path = "name", spec = Like.class),
-          @Spec(path = "courseStatus", spec = Equal.class),
-          @Spec(path = "courseLevel", spec = Equal.class)})
+    @And({@Spec(path = "courseLevel",
+                spec = Equal.class),
+          @Spec(path = "courseStatus",
+                spec = Equal.class),
+          @Spec(path = "name",
+                spec = Like.class)})
     public interface CourseSpec extends Specification<CourseModel> {
 
     }
 
-    @And({@Spec(path = "title", spec = Like.class)})
+    @And({@Spec(path = "title",
+                spec = Like.class)})
     public interface ModuleSpec extends Specification<ModuleModel> {
 
     }
 
-    @And({@Spec(path = "title", spec = Like.class)})
+    @And({@Spec(path = "title",
+                spec = Like.class)})
     public interface LessonSpec extends Specification<LessonModel> {
 
     }

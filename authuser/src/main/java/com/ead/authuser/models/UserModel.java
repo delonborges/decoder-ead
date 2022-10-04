@@ -24,14 +24,19 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID userId;
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false,
+            unique = true,
+            length = 50)
     private String username;
     @Column(nullable = false)
     @JsonIgnore
     private String password;
-    @Column(nullable = false, length = 150)
+    @Column(nullable = false,
+            length = 150)
     private String fullName;
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false,
+            unique = true,
+            length = 50)
     private String email;
     @Column(length = 20)
     private String phoneNumber;
@@ -46,9 +51,11 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @Enumerated(EnumType.STRING)
     private UserType userType;
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+                pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime creationDate;
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+                pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime lastUpdateDate;
 }
