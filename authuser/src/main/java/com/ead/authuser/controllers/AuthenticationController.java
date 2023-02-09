@@ -6,6 +6,8 @@ import com.ead.authuser.enums.UserType;
 import com.ead.authuser.models.UserModel;
 import com.ead.authuser.services.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +18,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*",
+             maxAge = 3600)
 @RequestMapping("/auth")
 public class AuthenticationController {
 
     private final UserService userService;
+    Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     public AuthenticationController(UserService userService) {
         this.userService = userService;
@@ -30,9 +34,11 @@ public class AuthenticationController {
     public ResponseEntity<Object> registerUser(@RequestBody @Validated(UserDto.UserView.RegistrationPost.class)
                                                @JsonView(UserDto.UserView.RegistrationPost.class) UserDto userDto) {
         if (userService.existsByUsername(userDto.getUsername())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Username is already taken.");
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                                 .body("Error: Username is already taken.");
         } else if (userService.existsByEmail(userDto.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is already in use.");
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                                 .body("Error: Email is already in use.");
         } else {
             var userModel = new UserModel();
             BeanUtils.copyProperties(userDto, userModel);
@@ -41,7 +47,18 @@ public class AuthenticationController {
             userModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
             userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
             userService.save(userModel);
-            return ResponseEntity.status(HttpStatus.CREATED).body(userModel);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                                 .body(userModel);
         }
+    }
+
+    @GetMapping("/")
+    public String index() {
+        logger.trace("TRACE");
+        logger.debug("DEBUG");
+        logger.info("INFO");
+        logger.warn("WARN");
+        logger.error("ERROR");
+        return "Logging Spring Boot...";
     }
 }

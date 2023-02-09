@@ -16,3 +16,13 @@ spring:
       hibernate:
         show_sql: true
     open-in-view: false
+  output:
+    ansi:
+      enabled: Always
+
+logging:
+  level:
+    com.ead: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
