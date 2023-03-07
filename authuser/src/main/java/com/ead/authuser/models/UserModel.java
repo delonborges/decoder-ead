@@ -23,19 +23,35 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
 
     public static final long serialVersionUID = 1L;
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO) private UUID userId;
-    @Column(nullable = false, unique = true, length = 50) private String username;
-    @Column(nullable = false) @JsonIgnore private String password;
-    @Column(nullable = false, length = 150) private String fullName;
-    @Column(nullable = false, unique = true, length = 50) private String email;
-    @Column(length = 20) private String phoneNumber;
-    @Column(length = 20) private String cpf;
-    @Column private String imageUrl;
-    @Column(nullable = false) @Enumerated(EnumType.STRING) private UserStatus userStatus;
-    @Column(nullable = false) @Enumerated(EnumType.STRING) private UserType userType;
-    @Column(nullable = false) @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID userId;
+    @Column(nullable = false, unique = true, length = 50)
+    private String username;
+    @Column(nullable = false)
+    @JsonIgnore
+    private String password;
+    @Column(nullable = false, length = 150)
+    private String fullName;
+    @Column(nullable = false, unique = true, length = 50)
+    private String email;
+    @Column(length = 20)
+    private String phoneNumber;
+    @Column(length = 20)
+    private String cpf;
+    @Column
+    private String imageUrl;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+    @Column(nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime creationDate;
-    @Column(nullable = false) @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    @Column(nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime lastUpdateDate;
 }
 

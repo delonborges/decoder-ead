@@ -24,7 +24,8 @@ import java.util.UUID;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class CourseController {
 
-    final CourseService courseService;
+    private static final String COURSE_NOT_FOUND = "Course ID not found";
+    private final CourseService courseService;
 
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
@@ -36,17 +37,20 @@ public class CourseController {
         BeanUtils.copyProperties(courseDto, courseModel);
         courseModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         courseModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-        return ResponseEntity.status(HttpStatus.CREATED).body(courseService.save(courseModel));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                             .body(courseService.save(courseModel));
     }
 
     @DeleteMapping("/{courseId}")
     public ResponseEntity<Object> deleteCourse(@PathVariable(value = "courseId") UUID courseId) {
         Optional<CourseModel> courseModelOptional = courseService.findById(courseId);
         if (courseModelOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course ID not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                 .body(COURSE_NOT_FOUND);
         } else {
             courseService.delete(courseModelOptional.get());
-            return ResponseEntity.status(HttpStatus.OK).body("Course deleted successfully");
+            return ResponseEntity.status(HttpStatus.OK)
+                                 .body("Course deleted successfully");
         }
     }
 
@@ -55,12 +59,14 @@ public class CourseController {
                                                @RequestBody @Valid CourseDto courseDto) {
         Optional<CourseModel> courseModelOptional = courseService.findById(courseId);
         if (courseModelOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course ID not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                 .body(COURSE_NOT_FOUND);
         } else {
             var courseModel = courseModelOptional.get();
             BeanUtils.copyProperties(courseDto, courseModel);
             courseModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-            return ResponseEntity.status(HttpStatus.CREATED).body(courseService.save(courseModel));
+            return ResponseEntity.status(HttpStatus.CREATED)
+                                 .body(courseService.save(courseModel));
         }
     }
 
@@ -69,16 +75,16 @@ public class CourseController {
                                                            @PageableDefault(sort = "courseId",
                                                                             direction = Sort.Direction.ASC)
                                                            Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(courseService.findAll(courseSpec, pageable));
+        return ResponseEntity.status(HttpStatus.OK)
+                             .body(courseService.findAll(courseSpec, pageable));
     }
 
     @GetMapping("/{courseId}")
     public ResponseEntity<Object> getCourse(@PathVariable(value = "courseId") UUID courseId) {
         Optional<CourseModel> courseModelOptional = courseService.findById(courseId);
-        if (courseModelOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course ID not found");
-        } else {
-            return ResponseEntity.status(HttpStatus.OK).body(courseModelOptional.get());
-        }
+        return courseModelOptional.<ResponseEntity<Object>>map(courseModel -> ResponseEntity.status(HttpStatus.OK)
+                                                                                            .body(courseModel))
+                                  .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                                                 .body(COURSE_NOT_FOUND));
     }
 }

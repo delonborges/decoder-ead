@@ -22,8 +22,7 @@ public class LessonModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID lessonId;
 
-    @Column(nullable = false,
-            length = 150)
+    @Column(nullable = false, length = 150)
     private String title;
 
     @Column(nullable = false)
@@ -33,12 +32,10 @@ public class LessonModel implements Serializable {
     private String videoUrl;
 
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING,
-                pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime creationDate;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToOne(optional = false,
-               fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ModuleModel module;
 }

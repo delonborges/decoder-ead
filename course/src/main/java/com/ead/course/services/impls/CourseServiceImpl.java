@@ -38,9 +38,7 @@ public class CourseServiceImpl implements CourseService {
         List<ModuleModel> moduleModelList = moduleRepository.findAllModulesFromCourse(courseModel.getCourseId());
         if (!moduleModelList.isEmpty()) {
             for (ModuleModel moduleModel : moduleModelList) {
-                List<LessonModel>
-                        lessonModelList =
-                        lessonRepository.findAllLessonsFromModule(moduleModel.getModuleId());
+                List<LessonModel> lessonModelList = lessonRepository.findAllLessonsFromModule(moduleModel.getModuleId());
                 if (!lessonModelList.isEmpty()) {
                     lessonRepository.deleteAll(lessonModelList);
                 }

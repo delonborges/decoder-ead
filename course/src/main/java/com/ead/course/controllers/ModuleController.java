@@ -25,8 +25,9 @@ import java.util.UUID;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class ModuleController {
 
-    final ModuleService moduleService;
-    final CourseService courseService;
+    private static final String MODULE_NOT_FOUND = "Module not found for this course";
+    private final ModuleService moduleService;
+    private final CourseService courseService;
 
     public ModuleController(ModuleService moduleService, CourseService courseService) {
         this.moduleService = moduleService;
@@ -55,7 +56,7 @@ public class ModuleController {
         Optional<ModuleModel> moduleModelOptional = moduleService.findModuleFromCourse(courseId, moduleId);
         if (moduleModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                 .body("Module not found for this course");
+                                 .body(MODULE_NOT_FOUND);
         } else {
             moduleService.delete(moduleModelOptional.get());
             return ResponseEntity.status(HttpStatus.OK)
@@ -70,7 +71,7 @@ public class ModuleController {
         Optional<ModuleModel> moduleModelOptional = moduleService.findModuleFromCourse(courseId, moduleId);
         if (moduleModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                 .body("Module not found for this course");
+                                 .body(MODULE_NOT_FOUND);
         } else {
             var moduleModel = moduleModelOptional.get();
             BeanUtils.copyProperties(moduleDto, moduleModel);
@@ -95,12 +96,9 @@ public class ModuleController {
     public ResponseEntity<Object> getModuleById(@PathVariable(value = "courseId") UUID courseId,
                                                 @PathVariable(value = "moduleId") UUID moduleId) {
         Optional<ModuleModel> moduleModelOptional = moduleService.findModuleFromCourse(courseId, moduleId);
-        if (moduleModelOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                 .body("Module not found for this course");
-        } else {
-            return ResponseEntity.status(HttpStatus.OK)
-                                 .body(moduleModelOptional.get());
-        }
+        return moduleModelOptional.<ResponseEntity<Object>>map(moduleModel -> ResponseEntity.status(HttpStatus.OK)
+                                                                                            .body(moduleModel))
+                                  .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                                                 .body(MODULE_NOT_FOUND));
     }
 }

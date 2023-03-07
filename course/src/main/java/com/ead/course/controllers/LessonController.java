@@ -25,8 +25,8 @@ import java.util.UUID;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class LessonController {
 
-    final LessonService lessonService;
-    final ModuleService moduleService;
+    private final LessonService lessonService;
+    private final ModuleService moduleService;
 
     public LessonController(LessonService lessonService, ModuleService moduleService) {
         this.lessonService = lessonService;
@@ -95,12 +95,9 @@ public class LessonController {
     public ResponseEntity<Object> getLessonById(@PathVariable(value = "moduleId") UUID moduleId,
                                                 @PathVariable(value = "lessonId") UUID lessonId) {
         Optional<LessonModel> lessonModelOptional = lessonService.findLessonFromModule(moduleId, lessonId);
-        if (lessonModelOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                 .body("Lesson not found for this course");
-        } else {
-            return ResponseEntity.status(HttpStatus.OK)
-                                 .body(lessonModelOptional.get());
-        }
+        return lessonModelOptional.<ResponseEntity<Object>>map(lessonModel -> ResponseEntity.status(HttpStatus.OK)
+                                                                                            .body(lessonModel))
+                                  .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                                                 .body("Lesson not found for this course"));
     }
 }
