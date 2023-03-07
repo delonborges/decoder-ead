@@ -18,8 +18,7 @@ import java.time.ZoneId;
 
 @Log4j2
 @RestController
-@CrossOrigin(origins = "*",
-             maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/auth")
 public class AuthenticationController {
 
@@ -30,18 +29,17 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> registerUser(
-            @RequestBody
-            @Validated(UserDto.UserView.RegistrationPost.class)
-            @JsonView(UserDto.UserView.RegistrationPost.class)
-            UserDto userDto) {
+    public ResponseEntity<Object> registerUser(@RequestBody @Validated(UserDto.UserView.RegistrationPost.class)
+                                               @JsonView(UserDto.UserView.RegistrationPost.class) UserDto userDto) {
         log.debug("POST registerUser userDto received {} ", userDto.toString());
         if (userService.existsByUsername(userDto.getUsername())) {
             log.warn("Username {} is already taken", userDto.getUsername());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Username is already taken.");
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                                 .body("Error: Username is already taken.");
         } else if (userService.existsByEmail(userDto.getEmail())) {
             log.warn("Email {} is already taken", userDto.getUsername());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is already in use.");
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                                 .body("Error: Email is already in use.");
         } else {
             var userModel = new UserModel();
             BeanUtils.copyProperties(userDto, userModel);
@@ -52,7 +50,8 @@ public class AuthenticationController {
             userService.save(userModel);
             log.debug("POST registerUser userModel saved {} ", userModel.toString());
             log.info("User saved successfully with userId {}", userModel.getUserId());
-            return ResponseEntity.status(HttpStatus.CREATED).body(userModel);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                                 .body(userModel);
         }
     }
 
